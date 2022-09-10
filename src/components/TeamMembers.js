@@ -3,9 +3,17 @@ import React, { Component } from "react";
 class TeamMembers extends Component{
     constructor(props){
         super(props)
+
         this.state = {
-            members: this.props.project.members.map((member) => member.name),
+            members: this.props.project.members,
             input: ''
+        }
+    }
+
+    componentDidUpdate(prevProp){
+        console.log('logging prevProp', prevProp)
+        if(this.props.project.members !== prevProp.project.members){
+        this.setState({members: this.props.project.members})
         }
     }
 
@@ -14,26 +22,29 @@ class TeamMembers extends Component{
     }
 
     addMember = async() => {
+        let updatedProject = this.props.project
         let member = this.state.input
         if(member !== ''){
-        this.props.project.members.push({name: member})
-        this.props.updateProject(this.props.project)
+            // this.props.project.members.push({name: member})
+            // this.props.updateProject(this.props.project)
+        this.props.updateProject({...updatedProject, members: [...updatedProject.members, {name: member}]})
         this.setState({input: ''})
-        console.log(this.props.project.members)
-        console.log(this.state.members)
-        this.setState({members: this.props.project.members.map((member) => member.name)})
+        //this.setState({members: updatedProject.members.map((member) => member)})
         }
     }
 
     removeMember(index){
-        this.props.project.members.splice(index,1)
-        this.props.updateProject(this.props.project)
-        this.setState({members: this.props.project.members.map((member) => member.name)})
+        let updatedProject = this.props.project
+        console.log('logging updated project', updatedProject)
+        updatedProject.members.splice(index,1)
+        this.props.updateProject(updatedProject)
+        //this.setState({members: this.props.project.members.map((member) => member)})
     }
 
 
     render(){
         console.log('rendering team members')
+        console.log('logging this.state.members', this.state.members)
         if(!this.props.project.complete){
         return(
             <div className="row">
@@ -42,7 +53,7 @@ class TeamMembers extends Component{
                 {this.state.members.map((member, index) => {
                     return([
                         <React.Fragment key={index}>
-                        <button className="btn btn-danger me-2 mb-1" onClick={() => this.removeMember(index)}>-</button>{member}<br></br>
+                        <button className="btn btn-danger me-2 mb-1" onClick={() => this.removeMember(index)}>-</button>{member.name}<br></br>
                         </React.Fragment>
                     ])
                 })}
@@ -62,7 +73,7 @@ class TeamMembers extends Component{
             {this.state.members.map((member, index) => {
                 return([
                     <React.Fragment key={index}>
-                    {member}<br></br>
+                    {member.name}<br></br>
                     </React.Fragment>
                 ])
             })}

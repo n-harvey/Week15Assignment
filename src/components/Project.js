@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {NewProject} from './NewProject'
 import { managerApi } from "../rest/ManagerApi";
 import TeamMembers from "./TeamMembers"
@@ -7,6 +7,8 @@ export const Project = (props) => {
     const { project, deleteProject, updateProject,} = props
     const [style, setStyle] = useState("")
 
+
+    
     const changeStyle = () => {
         console.log('complete project')
         setStyle('completed')
@@ -31,7 +33,7 @@ export const Project = (props) => {
                             <p>Project Lead: {project.lead}</p>
                             <p>Project Due Date: {project.date}</p>
                         </div>
-                        <TeamMembers project={project} updateProject={updateProject} />
+                        <TeamMembers project={project} updateProject={updateProject}/>
                     </div>
                 </div>
             </div>
